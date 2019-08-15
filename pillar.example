@@ -1,0 +1,74 @@
+include:
+  - clickhouse			# install and configure
+  - clickhouse.installed	# install only
+  - clickhouse.config.server
+  - clickhouse.config.users
+  - clickhouse.removed		# remove packages
+  - clickhouse.purged		# remove packages and config files
+clickhouse:
+  packages:
+    # setting version to latest explicitly is dangerous. Package will be updated every time it becomes possible.
+    # omit this if no specific version required.
+    version: latest 
+  server:
+    config_dir: /etc/clickhouse-server/
+    config:
+      # configs can be managed simply as files by Salt
+      files:
+        - etc/clickhouse-server/conf.d/yourfile.xml
+        - ...
+      # Otherwise, only if files are not in pillar, all parameters in YAML will be converted to XML as is.
+      # Except "xmlattributes" and "value", which used in a special way. For example:
+
+      # compression:
+      #   xmlattributes:
+      #     incl: clickhouse_compression
+      #     replace: replace
+      #   case:
+      #     min_part_size: 10000000000
+      #     min_part_size_ratio: 0.01
+      #     method: zstd
+      # interserver_http_port:
+      #   xmlattributes:
+      #     incl: http
+      #   value: 9009     
+
+      # Will be expanded to
+      # <compression incl="clickhouse_compression" replace="replace">
+      #     <case>
+      #         <min_part_size>10000000000</min_part_size>
+      #         <min_part_size_ratio>0.01</min_part_size_ratio>
+      #         <method>zstd</method>
+      #     </case>
+      # </compression>
+      # <interserver_http_port incl="http">9009</interserver_http_port>
+
+      # But without xmlattributes
+      # sample:
+      #   value: click
+
+      # <sample>
+      #     <value>click</value>
+      # </sample>
+
+    users:
+      %user_name%:
+        # Do not include both "password" and "password_sha256_hex" into pillar
+        password: # this will be converted to base64 in config file
+        # For other parameters schema is the same as for configuration
+        # except config_files are not supported for users.
+
+  repo:
+    # RHEL
+    name: altinity_clickhouse
+    baseurl: 'https://packagecloud.io/altinity/clickhouse/el/7/$basearch'
+    humanname: 'Altinity ClickHouse repo'
+    gpgkey: 'https://packagecloud.io/altinity/clickhouse/gpgkey'
+    gpgcheck: False
+    # Debian
+    name: 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/'
+    humanname: 'ClickHouse official repo'
+    keyid: E0C56BD4
+    keyserver: keyserver.ubuntu.com
+    
+

@@ -1,0 +1,10 @@
+<!--------------------------------------------------------------------------->
+<!--Cooked by SaltStack. Don't change it by hands, it will be overwritten. -->
+<!--------------------------------------------------------------------------->
+{%- from "clickhouse/maps/xml.jinja" import block with context %}
+
+<yandex>
+    {%- for key,value in config.iteritems() -%}
+      {{ block(key=key,value=value,spaces=4) }}
+    {%- endfor %}
+</yandex>

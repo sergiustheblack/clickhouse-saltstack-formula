@@ -1,0 +1,36 @@
+{%- macro insert_spaces(num=0) -%}
+  {%- for space in range(1,num) if num != 0 -%}
+  {{ ' ' }}
+  {%- endfor -%}
+{%- endmacro -%}
+
+{%- macro line_block(key, value='', params={}, spaces=0) %}
+{{ insert_spaces(spaces) }}<{{ key }}{{ params|xmlattr }}>{{ value }}</{{ key }}>
+{%- endmacro -%}
+
+{%- macro dict_block(key, value, params={}, spaces=0) -%}
+  {%- if value.get('xmlattributes') -%}
+    {%- set params = value.get('xmlattributes') -%}
+  {%- endif -%}
+  {%- if value.get('value') and value.get('xmlattributes') -%}
+{{ block(key=key,value=value.get('value'),params=params,spaces=spaces) }}
+  {%- else %}
+{{ insert_spaces(spaces) }}<{{ key }}{{ params|xmlattr }}>
+  {%- for k,v in value.iteritems() if k != 'xmlattributes' -%}
+{{ insert_spaces(spaces) }}{{ block(key=k,value=v,spaces=spaces+4) }}
+  {%- endfor %}
+{{ insert_spaces(spaces) }}</{{ key }}>
+  {%- endif -%}
+{%- endmacro -%}
+
+{%- macro block(key, value, params={}, spaces=0) -%}
+  {%- if value is mapping -%}
+      {{ dict_block(key=key, value=value, params=params, spaces=spaces) }}
+  {%- elif value is string or value is number -%}
+      {{ line_block(key=key, value=value, params=params, spaces=spaces) }}
+  {%- elif value is sequence -%}
+    {%- for element in value -%}
+        {{ block(key=key, value=element, params=params, spaces=spaces) }}
+    {%- endfor -%}
+  {%- endif -%}
+{%- endmacro -%}

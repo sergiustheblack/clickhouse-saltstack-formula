@@ -1,0 +1,37 @@
+{%- set clickhouse_repo = salt['grains.filter_by']({
+    'Debian': {
+        'humanname': 'ClickHouse official repo',
+        'name': 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/',
+        'keyid': 'E0C56BD4',
+        'keyserver': 'keyserver.ubuntu.com',
+    },
+    'RedHat': {
+        'name': 'altinity_clickhouse',
+        'baseurl': 'https://packagecloud.io/altinity/clickhouse/el/7/$basearch',
+        'humanname': 'Altinity ClickHouse repo',
+        'gpgkey': 'https://packagecloud.io/altinity/clickhouse/gpgkey',
+        'gpgcheck': False,
+    },
+}, grain='os_family', merge=salt['pillar.get']('clickhouse:repo')) %}
+
+{%- set clickhouse_server = {
+    'config_dir': '/etc/clickhouse-server/',
+} %} 
+
+{%- do clickhouse_server.update(salt['pillar.get']('clickhouse:server')) %}
+
+{%- set clickhouse_packages = salt['grains.filter_by']({
+    'default': {
+    'server': 'clickhouse-server',
+    'client': 'clickhouse-client',
+    'version': salt['pillar.get']('clickhouse:packages:version'),
+    },
+    'Debian': {'additional_packages': ['clickhouse-common-static']},
+    'RedHat': {'additional_packages': ['clickhouse-common-static', 'clickhouse-server-common']},
+}, grain='os_family', base='default') %}
+
+{# for future use #}
+{# {%- set clickhouse_client_config = salt['pillar.get']('clickhouse:client').get('') %} #}
+
+{%- set clickhouse_users = clickhouse_server.get('users') %}
+
