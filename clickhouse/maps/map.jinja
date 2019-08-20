@@ -6,11 +6,11 @@
         'keyserver': 'keyserver.ubuntu.com',
     },
     'RedHat': {
-        'name': 'altinity_clickhouse',
-        'baseurl': 'https://packagecloud.io/altinity/clickhouse/el/7/$basearch',
-        'humanname': 'Altinity ClickHouse repo',
-        'gpgkey': 'https://packagecloud.io/altinity/clickhouse/gpgkey',
-        'gpgcheck': False,
+        'name': 'clickhouse_yandex',
+        'baseurl': 'https://repo.yandex.ru/clickhouse/rpm/stable/x86_64',
+        'humanname': 'Yandex ClickHouse repo',
+        'gpgkey': 'https://repo.yandex.ru/clickhouse/CLICKHOUSE-KEY.GPG',
+        'gpgcheck': True,
     },
 }, grain='os_family', merge=salt['pillar.get']('clickhouse:repo')) %}
 

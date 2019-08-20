@@ -1,13 +1,7 @@
 {%- from "clickhouse/maps/map.jinja" import clickhouse_packages, clickhouse_repo with context %}
 
-clickhouse_repo:
-  pkgrepo.managed:
-    {%- for key,value in clickhouse_repo.iteritems() %}
-    - {{ key }}: {{ value }}
-    {%- endfor %}
-    - require_in:
-      - pkg: clickhouse_server
-      - pkg: clickhouse_client
+include:
+  - clickhouse.repo
 
 clickhouse_client:
   pkg.installed:
