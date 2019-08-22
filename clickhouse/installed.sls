@@ -9,7 +9,8 @@ clickhouse_client:
     {%- if clickhouse_packages.get('version') %}
     - version: {{ clickhouse_packages.version }}
     {%- endif %}
-
+    - require:
+      - clickhouse_repo
 clickhouse_server:
   pkg.installed:
     - name: {{ clickhouse_packages.server }}

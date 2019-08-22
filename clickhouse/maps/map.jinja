@@ -14,11 +14,11 @@
     },
 }, grain='os_family', merge=salt['pillar.get']('clickhouse:repo')) %}
 
-{%- set clickhouse_server = {
+{%- set clickhouse_server = salt['grains.filter_by']({
+    'default': {
     'config_dir': '/etc/clickhouse-server/',
-} %} 
-
-{%- do clickhouse_server.update(salt['pillar.get']('clickhouse:server')) %}
+    }, 
+}, merge=salt['pillar.get']('clickhouse:server'), base='default') %} 
 
 {%- set clickhouse_packages = salt['grains.filter_by']({
     'default': {

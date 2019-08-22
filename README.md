@@ -7,3 +7,15 @@ You will have to configure filetree on salt-master for use with files directive 
 ## rpm repo notes
 Official Yandex rpm repo currently (on 20.08.2019) contains only one signed version of Clickhouse - 19.13.2.19-2.
 If you need to install older version, you can set up non-official [altinity](https://github.com/Altinity/clickhouse-rpm-install) repo. Example can be found in [pillar.example](pillar.example)
+
+## Usage
+Add required formulas to your pillar
+```
+formulas:
+  - clickhouse			# install and configure
+  - clickhouse.installed	# install only
+  - clickhouse.config.server
+  - clickhouse.config.users
+  - clickhouse.removed		# remove packages
+  - clickhouse.purged		# remove packages and config files
+```

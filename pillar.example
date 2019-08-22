@@ -1,10 +1,3 @@
-include:
-  - clickhouse			# install and configure
-  - clickhouse.installed	# install only
-  - clickhouse.config.server
-  - clickhouse.config.users
-  - clickhouse.removed		# remove packages
-  - clickhouse.purged		# remove packages and config files
 clickhouse:
   packages:
     # setting version to latest explicitly is dangerous. Package will be updated every time it becomes possible.
