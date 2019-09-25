@@ -22,6 +22,10 @@ config_dirs_server:
     - user: root
     - group: root
     - mode: 644
+{%- if clickhouse_server.restart_on_config_change %}
+    - listen_in:
+      - service: clickhouse_service
+{%- endif %}
 {%- endfor %}
 
 {%- else %}
@@ -34,4 +38,8 @@ config_dirs_server:
     - template: jinja
     - context:
         config: {{ clickhouse_server.config }}
+{%- if clickhouse_server.restart_on_config_change %}
+    - listen_in:
+      - service: clickhouse_service
+{%- endif %}
 {% endif %}

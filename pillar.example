@@ -5,6 +5,8 @@ clickhouse:
     version: latest 
   server:
     config_dir: /etc/clickhouse-server/
+    # automatically restarts service on config change. Might be inappropriate for clusters
+    restart_on_config_change: false  
     config:
       # configs can be managed simply as files by Salt
       # but filetree MUST be configured on salt-master side
@@ -53,6 +55,28 @@ clickhouse:
         # For other parameters schema is the same as for configuration
         # except config_files are not supported for users.
 
+    quotas:
+      # same as for config. "files" are not supported
+      default:
+        xmlattributes:
+          replace: replace
+        interval:
+          duration: 3600
+        # ...
+
+    profiles:
+      # same as for config. "files" are not supported
+      web:
+        readonly: 1
+        # ...
+
+  # configuration for clickhouse-client. "files" are supported
+  # This example is suitable for RHEL/CentOS
+  client:
+    config:
+      openSSL:
+        client:
+          caConfig: '/etc/pki/tls/cert.pem'
   repo:
     # RHEL alternative repo for releases before 2019-08-02
     name: altinity_clickhouse

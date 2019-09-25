@@ -17,6 +17,7 @@
 {%- set clickhouse_server = salt['grains.filter_by']({
     'default': {
     'config_dir': '/etc/clickhouse-server/',
+    'restart_on_config_change': false,
     }, 
 }, merge=salt['pillar.get']('clickhouse:server'), base='default') %} 
 
@@ -30,8 +31,10 @@
     'RedHat': {'additional_packages': ['clickhouse-common-static', 'clickhouse-server-common']},
 }, grain='os_family', base='default') %}
 
-{# for future use #}
-{# {%- set clickhouse_client_config = salt['pillar.get']('clickhouse:client').get('') %} #}
-
 {%- set clickhouse_users = clickhouse_server.get('users') %}
 
+{%- set clickhouse_client = salt['grains.filter_by']({
+    'default': {
+    'config_dir': '/etc/clickhouse-client/',
+    }, 
+}, merge=salt['pillar.get']('clickhouse:client'), base='default') %} 

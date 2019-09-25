@@ -7,6 +7,15 @@ include:
 {%- if salt.pillar.get('clickhouse:server:users') %}
   - clickhouse.config.users
 {%- endif %}
+{%- if salt.pillar.get('clickhouse:server:quotas') %}
+  - clickhouse.config.quotas
+{%- endif %}
+{%- if salt.pillar.get('clickhouse:server:profiles') %}
+  - clickhouse.config.profiles
+{%- endif %}
+{%- if salt.pillar.get('clickhouse:client') %}
+  - clickhouse.config.client
+{%- endif %}
 {%- else %}
 {{ raise("OS family " ~ grains['os_family'] ~ " is not supported.") }}
 {%- endif %}

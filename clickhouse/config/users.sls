@@ -21,4 +21,8 @@ config_dirs_users:
     - context:
       clickhouse_user: {{ user }}
       user_name: {{ user_name }}
+{%- if clickhouse_server.restart_on_config_change %}
+    - listen_in:
+      - service: clickhouse_service
+{%- endif %}
 {%- endfor %}
