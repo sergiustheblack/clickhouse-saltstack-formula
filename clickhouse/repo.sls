@@ -2,7 +2,7 @@
 
 clickhouse_repo:
   pkgrepo.managed:
-    {%- for key,value in clickhouse_repo.iteritems() %}
+    {%- for key,value in clickhouse_repo.items() %}
     - {{ key }}: {{ value }}
     {%- endfor %}
 

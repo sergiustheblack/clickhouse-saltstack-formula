@@ -16,7 +16,7 @@
 {{ block(key=key,value=value.get('value'),params=params,spaces=spaces) }}
   {%- else %}
 {{ insert_spaces(spaces) }}<{{ key }}{{ params|xmlattr }}>
-  {%- for k,v in value.iteritems() if k != 'xmlattributes' -%}
+  {%- for k,v in value.items() if k != 'xmlattributes' -%}
 {{ insert_spaces(spaces) }}{{ block(key=k,value=v,spaces=spaces+4) }}
   {%- endfor %}
 {{ insert_spaces(spaces) }}</{{ key }}>

@@ -4,7 +4,7 @@
 {%- from "clickhouse/maps/xml.jinja" import block with context %}
 
 <yandex>
-    {%- for key,value in config.iteritems() -%}
+    {%- for key,value in config.items() -%}
       {{ block(key=key,value=value,spaces=4) }}
     {%- endfor %}
 </yandex>

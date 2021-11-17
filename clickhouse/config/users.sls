@@ -9,7 +9,7 @@ config_dirs_users:
     - names:
       - {{ clickhouse_server.config_dir }}/users.d
 
-{%- for user_name, user in clickhouse_users.iteritems() %}
+{%- for user_name, user in clickhouse_users.items() %}
 
 {{ clickhouse_server.config_dir }}/users.d/{{ user_name }}.xml:
   file.managed:

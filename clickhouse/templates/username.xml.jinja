@@ -9,7 +9,7 @@
             {%- if 'password' in clickhouse_user and 'password_sha256_hex' in clickhouse_user -%}
               {{ raise('Both "password" and "password_sha256_hex" found in pillar.') }}
             {%- else -%}
-            {%- for key,value in clickhouse_user.iteritems() -%}
+            {%- for key,value in clickhouse_user.items() -%}
               {%- if key == 'password' -%}
                 {%- set value = value | sha256 -%}
                 {%- set key = 'password_sha256_hex' -%}

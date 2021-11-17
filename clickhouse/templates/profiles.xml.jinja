@@ -5,7 +5,7 @@
 
 <yandex>
     <profiles>
-        {%- for key,value in config.iteritems() -%}
+        {%- for key,value in config.items() -%}
           {{ block(key=key,value=value,spaces=8) }}
         {%- endfor %}
     </profiles>
