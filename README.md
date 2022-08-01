@@ -31,22 +31,17 @@ clickhouse:
       logger: 
         level: information
       http_port:
-        xmlattributes:
-          remove: remove
+        "@remove": remove
       tcp_port:
-        xmlattributes:
-          remove: remove
+        "@remove": remove
       interserver_http_port:
-        xmlattributes:
-          remove: remove
+        "@remove": remove
       tcp_port_secure:
-        xmlattributes:
-          replace: replace
-        value:  9440
+        - "@replace": replace
+        - 9440
       https_port:
-        xmlattributes:
-          replace: replace
-        value: 8443
+        - "@replace": replace
+        - 8443
       interserver_https_port: 9019
       openSSL:
         server:
@@ -66,16 +61,14 @@ clickhouse:
           caConfig: '/etc/pki/tls/cert.pem'
       listen_host: 0.0.0.0
       compression:
-        xmlattributes:
-          remove: remove 
+        "@remove": remove 
       remote_servers:
-        xmlattributes:
-          incl: clickhouse_remote_servers
-          optional: true
+        "@incl": clickhouse_remote_servers
+        "@optional": true
         clickhouse_cluster01:
           shard:
-            - internal_replication: true
-              replica:
+          - - internal_replication: true
+            - replica:
                 - host: ch-replica01.example.com
                   port: 9440
                   secure: true
@@ -85,8 +78,8 @@ clickhouse:
                 - host: ch-replica03.example.com
                   port: 9440
                   secure: true
-            - internal_replication: true
-              replica:
+          - - internal_replication: true
+            - replica:
                 - host: ch-replica04.example.com
                   port: 9440
                   secure: true
@@ -98,47 +91,37 @@ clickhouse:
       format_schema_path: '/var/lib/clickhouse/format_schemas/'
       zookeeper:
         node:
-          - xmlattributes:
-              index: 1
-            host: zookeeper-node10.example.com
-            port: 2181
-          - xmlattributes:
-              index: 2
-            host: zookeeper-node02.example.com
-            port: 2181
-          - xmlattributes:
-              index: 3
-            host: zookeeper-node03.example.com
-          - xmlattributes:
-              index: 4
-            host: zookeeper-node04.example.com
-            port: 2181
-          - xmlattributes:
-              index: 5
-            host: zookeeper-node05.example.com
-            port: 2181
-          - xmlattributes:
-              index: 6
-            host: zookeeper-node06.example.com
-            port: 2181
-          - xmlattributes:
-              index: 7
-            host: zookeeper-node07.example.com
-            port: 2181
-          - xmlattributes:
-              index: 8
-            host: zookeeper-node08.example.com
-            port: 2181
-          - xmlattributes:
-              index: 9
-            host: zookeeper-node09.example.com
-            port: 2181
+        - - "@index": 1
+          - host: zookeeper-node10.example.com
+          - port: 2181
+        - - "@index": 2
+          - host: zookeeper-node02.example.com
+          - port: 2181
+        - - "@index": 3
+          - host: zookeeper-node03.example.com
+        - - "@index": 4
+          - host: zookeeper-node04.example.com
+          - port: 2181
+        - - "@index": 5
+          - host: zookeeper-node05.example.com
+          - port: 2181
+        - - "@index": 6
+          - host: zookeeper-node06.example.com
+          - port: 2181
+        - - "@index": 7
+          - host: zookeeper-node07.example.com
+          - port: 2181
+        - - "@index": 8
+          - host: zookeeper-node08.example.com
+          - port: 2181
+        - - "@index": 9
+          - host: zookeeper-node09.example.com
+          - port: 2181
     users:
       default:
         networks:
-          xmlattributes:
-            replace: replace
-          ip:
+          - "@replace": replace
+          - ip:
             - 127.0.0.1
             - ::1
         profile: default

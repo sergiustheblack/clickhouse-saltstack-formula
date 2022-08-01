@@ -14,20 +14,18 @@ clickhouse:
         - etc/clickhouse-server/conf.d/yourfile.xml
         - ...
       # Otherwise, only if files are not in pillar, all parameters in YAML will be converted to XML as is.
-      # Except "xmlattributes" and "value", which used in a special way. For example:
+      # Except "@"-prefixed words, which used as xml attributes. For example:
 
       compression:
-        xmlattributes:
-          incl: clickhouse_compression
-          replace: replace
+        "@incl": clickhouse_compression
+        "@replace": replace
         case:
           min_part_size: 10000000000
           min_part_size_ratio: 0.01
           method: zstd
       interserver_http_port:
-        xmlattributes:
-          incl: http
-        value: 9009     
+        - "@incl": http
+        -  9009     
 
       # Will be expanded to
       # <compression incl="clickhouse_compression" replace="replace">
@@ -39,13 +37,43 @@ clickhouse:
       # </compression>
       # <interserver_http_port incl="http">9009</interserver_http_port>
 
-      # But without xmlattributes
+      # But without "@"
       # sample:
       #   value: click
 
       # <sample>
       #     <value>click</value>
       # </sample>
+
+      # Lists should be written in the following way
+      zookeeper:
+        node:
+        - - "@index": 1
+          - host: 192.168.0.1
+          - port: 2181
+        - - "@index": 2
+          - host: 192.168.0.2
+          - port: 2181
+        - - "@index": 3
+          - host: 192.168.0.2
+          - port: 2181
+
+      # expands to
+      # 
+      # <zookeeper>
+      #   <node index=1>
+      #     <host>192.168.0.1</host>
+      #     <port>2181</port>
+      #   </node>
+      #   <node index=2>
+      #     <host>192.168.0.2</host>
+      #     <port>2181</port>
+      #   </node>
+      #   <node index=3>
+      #     <host>192.168.0.3</host>
+      #     <port>2181</port>
+      #   </node>
+      # </zookeeper>
 
     users:
       %user_name%:
@@ -58,8 +86,7 @@ clickhouse:
     quotas:
       # same as for config. "files" are not supported
       default:
-        xmlattributes:
-          replace: replace
+        "@replace": replace
         interval:
           duration: 3600
         # ...
