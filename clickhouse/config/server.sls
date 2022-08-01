@@ -4,42 +4,41 @@ config_dirs_server:
   file.directory:
     - user: root
     - group: root
-    - mode: 755
+    - mode: '0755'
     - makedirs: True
     - names:
-      - {{ clickhouse_server.config_dir }}/conf.d
+      - {{ clickhouse_server.config_dir }}/config.d
 
-{%- if 'files' in clickhouse_server.config %}
+{%- if 'config_files' in clickhouse_server.config %}
 
-{{ clickhouse_server.config_dir }}/conf.d/salt_managed.xml:
+{{ clickhouse_server.config_dir }}/config.d/salt_managed.yaml:
   file.absent: []
 
-{%- for file in clickhouse_server.config.files %}
+{%- for file in clickhouse_server.config.config_files %}
 /{{ file }}:
   file.managed:
     - makedirs: True
-    - contents_pillar: {{ file.split('/')|join(':')}}
+    - contents_pillar: {{ file.split('/')|join(':') }}
     - user: root
     - group: root
-    - mode: 644
-{%- if clickhouse_server.restart_on_config_change %}
+    - mode: '0644'
+    {%- if clickhouse_server.restart_on_config_change %}
     - listen_in:
       - service: clickhouse_service
-{%- endif %}
+    {%- endif %}
 {%- endfor %}
 
 {%- else %}
-{{ clickhouse_server.config_dir }}/conf.d/salt_managed.xml:
-  file.managed:
-    - source: salt://clickhouse/templates/config.xml.jinja
+{{ clickhouse_server.config_dir }}/config.d/salt_managed.yaml:
+  file.serialize:
+    - serializer: yaml
+    - makedirs: True
+    - dataset: {{ clickhouse_server.config }}
     - user: root
     - group: root
-    - mode: 644
-    - template: jinja
-    - context:
-        config: {{ clickhouse_server.config }}
-{%- if clickhouse_server.restart_on_config_change %}
+    - mode: '0644'
+    {%- if clickhouse_server.restart_on_config_change %}
     - listen_in:
       - service: clickhouse_service
-{%- endif %}
+    {%- endif %}
 {% endif %}

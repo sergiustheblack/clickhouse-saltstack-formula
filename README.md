@@ -1,12 +1,12 @@
 # clickhouse-saltstack-formula
-saltstack formula for installation and configuration of Yandex Clickhouse
+saltstack formula for installation and configuration of Clickhouse
 
 ## 'clickhouse:config:files' usage
 You will have to configure filetree on salt-master for use with files directive in pillar.
 
-## rpm repo notes
-Official Yandex rpm repo currently (on 20.08.2019) contains only one signed version of Clickhouse - 19.13.2.19-2.
-If you need to install older version, you can set up non-official [altinity](https://github.com/Altinity/clickhouse-rpm-install) repo. Example can be found in [pillar.example](pillar.example)
+## Note after Aug 2022 formula update
+Versions of Clickhouse < 21.7 are no longer supported, because of removal of built-in XML parser. So consider upgrading.
+Updated parser can still be found at https://github.com/sergiustheblack/jinja_yaml2xml
 
 ## Usage
 Add required formulas to your pillar

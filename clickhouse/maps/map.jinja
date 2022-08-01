@@ -1,40 +1,48 @@
-{%- set clickhouse_repo = salt['grains.filter_by']({
-    'Debian': {
-        'humanname': 'ClickHouse official repo',
-        'name': 'deb http://repo.yandex.ru/clickhouse/deb/stable/ main/',
-        'keyid': 'E0C56BD4',
-        'keyserver': 'keyserver.ubuntu.com',
-    },
-    'RedHat': {
-        'name': 'clickhouse_yandex',
-        'baseurl': 'https://repo.yandex.ru/clickhouse/rpm/stable/x86_64',
-        'humanname': 'Yandex ClickHouse repo',
-        'gpgkey': 'https://repo.yandex.ru/clickhouse/CLICKHOUSE-KEY.GPG',
-        'gpgcheck': True,
-    },
-}, grain='os_family', merge=salt['pillar.get']('clickhouse:repo')) %}
+{%- load_yaml as repo %}
+Debian:
+  humanname: ClickHouse official repo
+  name: deb https://packages.clickhouse.com/deb stable main
+  keyid: 8919F6BD2B48D754
+  keyserver: keyserver.ubuntu.com
+RedHat:
+  name: clickhouse
+  baseurl: https://packages.clickhouse.com/rpm/stable/
+  humanname: ClickHouse - Stable Repository
+  gpgkey: https://packages.clickhouse.com/rpm/stable/repodata/repomd.xml.key
+  gpgcheck: False
+  repo_gpgcheck: True
+{%- endload %}
 
-{%- set clickhouse_server = salt['grains.filter_by']({
-    'default': {
-    'config_dir': '/etc/clickhouse-server/',
-    'restart_on_config_change': false,
-    }, 
-}, merge=salt['pillar.get']('clickhouse:server'), base='default') %} 
+{%- load_yaml as server %}
+default:
+  config_dir: /etc/clickhouse-server
+  restart_on_config_change: false
+{%- endload %}
 
-{%- set clickhouse_packages = salt['grains.filter_by']({
-    'default': {
-    'server': 'clickhouse-server',
-    'client': 'clickhouse-client',
-    'version': salt['pillar.get']('clickhouse:packages:version'),
-    },
-    'Debian': {'additional_packages': ['clickhouse-common-static']},
-    'RedHat': {'additional_packages': ['clickhouse-common-static', 'clickhouse-server-common']},
-}, grain='os_family', base='default') %}
+{%- load_yaml as packages %}
+default:
+  server: clickhouse-server
+  client: clickhouse-client
+  additional_packages: 
+  - clickhouse-common-static
+{%- endload %}
+
+{%- load_yaml as client %}
+default:
+  config_dir: /etc/clickhouse-client
+RedHat:
+  config:
+    openSSL:
+      client:
+        caConfig: /etc/pki/tls/cert.pem
+{%- endload %}
+
+{%- set clickhouse_repo = salt['grains.filter_by'](repo, grain='os_family', merge=salt['pillar.get']('clickhouse:repo')) %}
+
+{%- set clickhouse_server = salt['grains.filter_by'](server, merge=salt['pillar.get']('clickhouse:server'), base='default') %}
+
+{%- set clickhouse_packages = salt['grains.filter_by'](packages, merge=salt['pillar.get']('clickhouse:packages'), grain='os_family', base='default') %}
 
 {%- set clickhouse_users = clickhouse_server.get('users') %}
 
-{%- set clickhouse_client = salt['grains.filter_by']({
-    'default': {
-    'config_dir': '/etc/clickhouse-client/',
-    }, 
-}, merge=salt['pillar.get']('clickhouse:client'), base='default') %} 
+{%- set clickhouse_client = salt['grains.filter_by'](client, grain='os_family', merge=salt['pillar.get']('clickhouse:client'), base='default') %}

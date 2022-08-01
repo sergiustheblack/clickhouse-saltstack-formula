@@ -13,7 +13,7 @@ clickhouse:
       files:
         - etc/clickhouse-server/conf.d/yourfile.xml
         - ...
-      # Otherwise, only if files are not in pillar, all parameters in YAML will be converted to XML as is.
+      # Otherwise, only if config_files are not in pillar, all parameters in YAML will be put to config as is.
       # Except "@"-prefixed words, which used as xml attributes. For example:
 
       compression:
@@ -27,7 +27,7 @@ clickhouse:
         - "@incl": http
         -  9009     
 
-      # Will be expanded to
+      # Will become (after clickhouse's YAML processing)
       # <compression incl="clickhouse_compression" replace="replace">
       #     <case>
       #         <min_part_size>10000000000</min_part_size>

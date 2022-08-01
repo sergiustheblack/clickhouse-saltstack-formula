@@ -7,7 +7,7 @@ clickhouse_service_removed:
 
 clickhouse_server_removed:
   pkg.purged:
-    - pkgs: 
+    - pkgs:
       - {{ clickhouse_packages.server }}
       - {{ clickhouse_packages.client }}
       {% for pkg in clickhouse_packages.additional_packages %}

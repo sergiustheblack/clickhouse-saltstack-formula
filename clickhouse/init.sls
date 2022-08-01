@@ -13,9 +13,7 @@ include:
 {%- if salt.pillar.get('clickhouse:server:profiles') %}
   - clickhouse.config.profiles
 {%- endif %}
-{%- if salt.pillar.get('clickhouse:client') %}
   - clickhouse.config.client
-{%- endif %}
 {%- else %}
 {{ raise("OS family " ~ grains['os_family'] ~ " is not supported.") }}
 {%- endif %}
