@@ -1,9 +1,9 @@
 {%- load_yaml as repo %}
 Debian:
   humanname: ClickHouse official repo
-  name: deb https://packages.clickhouse.com/deb stable main
-  keyid: 8919F6BD2B48D754
-  keyserver: keyserver.ubuntu.com
+  name: deb [signed-by=/usr/share/keyrings/clickhouse-keyring.gpg] https://packages.clickhouse.com/deb stable main
+  file: /etc/apt/sources.list.d/clickhouse.list
+  clean_file: True
 RedHat:
   name: clickhouse
   baseurl: https://packages.clickhouse.com/rpm/stable/
