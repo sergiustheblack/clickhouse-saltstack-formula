@@ -1,0 +1,32 @@
+{#- https://github.com/AlexAkulov/clickhouse-backup/releases/download/v2.1.0/clickhouse-backup_2.1.0_arm64.deb -#}
+{#- https://github.com/AlexAkulov/clickhouse-backup/releases/download/v2.1.0/clickhouse-backup-2.1.0-1.x86_64.rpm -#}
+{#- version 2.1.0 is current at this moment -#}
+
+{%- set baserepo = 'https://github.com/AlexAkulov/clickhouse-backup' %}
+{%- load_yaml as default_settings %}
+default:
+  version: '2.1.0'
+  config_path: '/etc/clickhouse-backup/config.yml'
+{#- TODO: create clickhouse pillar parser to populate config automatically #}
+  config:
+    clickhouse:
+      host: {{ grains.id }}
+      skip_tables:
+      - system.*
+      - INFORMATION_SCHEMA.*
+      - information_schema.*
+{%- endload %}
+
+{%- set default = salt['grains.filter_by'](default_settings,
+  merge=salt['pillar.get']('clickhouse:backup'),
+  base='default') %}
+
+{%- load_yaml as clickhouse_backup_settings %}
+Debian:
+  url: {{ baserepo }}/releases/download/v{{ default.version }}/clickhouse-backup_{{ default.version }}_{{ grains.osarch }}.deb
+RedHat:
+  url: {{ baserepo }}/releases/download/v{{ default.version }}/clickhouse-backup-{{ default.version }}-1.{{ grains.osarch }}.rpm
+{%- endload -%}
+
+{%- set clickhouse_backup = salt['grains.filter_by'](clickhouse_backup_settings,
+  merge=default, base='default') %}
